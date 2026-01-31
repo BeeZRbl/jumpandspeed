@@ -9,229 +9,380 @@ local char = player.Character or player.CharacterAdded:Wait()
 local hum = char:WaitForChild("Humanoid")
 
 -- Tạo GUI Local
-local NameHub = Instance.new("ScreenGui")
-NameHub.Name = "NameHub"
-NameHub.Parent = player:WaitForChild("PlayerGui")
+local SpeedJumpGUI = Instance.new("ScreenGui")
+SpeedJumpGUI.Name = "SpeedJumpControl"
+SpeedJumpGUI.Parent = player:WaitForChild("PlayerGui")
 
 local Main = Instance.new("Frame")
-Main.Parent = NameHub
-Main.Size = UDim2.new(0.25, 0, 0.3, 0)
-Main.Position = UDim2.new(0.73, 0, 0.35, 0)
-Main.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
+Main.Parent = SpeedJumpGUI
+Main.Size = UDim2.new(0.28, 0, 0.35, 0)
+Main.Position = UDim2.new(0.7, 0, 0.3, 0)
+Main.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
 Main.BorderSizePixel = 0
 
-local Corner = Instance.new("UICorner")
-Corner.CornerRadius = UDim.new(0.05, 0)
-Corner.Parent = Main
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0.06, 0)
+UICorner.Parent = Main
 
-local Stroke = Instance.new("UIStroke")
-Stroke.Color = Color3.fromRGB(0, 255, 100)
-Stroke.Thickness = 2
-Stroke.Parent = Main
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Color = Color3.fromRGB(0, 200, 255)
+UIStroke.Thickness = 2
+UIStroke.Parent = Main
 
 -- Tiêu đề
 local Title = Instance.new("TextLabel")
 Title.Parent = Main
-Title.Size = UDim2.new(1, 0, 0.15, 0)
+Title.Size = UDim2.new(1, 0, 0.12, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "🚀 Speed And Jump"
-Title.TextColor3 = Color3.fromRGB(0, 255, 100)
+Title.Text = "⚡ SPEED & JUMP CONTROL"
+Title.TextColor3 = Color3.fromRGB(0, 200, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextScaled = true
 
--- Thanh trượt Tốc độ
-local SpeedFrame = Instance.new("Frame")
-SpeedFrame.Parent = Main
-SpeedFrame.Size = UDim2.new(0.9, 0, 0.15, 0)
-SpeedFrame.Position = UDim2.new(0.05, 0, 0.2, 0)
-SpeedFrame.BackgroundTransparency = 1
+-- === TỐC ĐỘ CHẠY ===
+local SpeedSection = Instance.new("Frame")
+SpeedSection.Parent = Main
+SpeedSection.Size = UDim2.new(0.9, 0, 0.22, 0)
+SpeedSection.Position = UDim2.new(0.05, 0, 0.15, 0)
+SpeedSection.BackgroundTransparency = 1
 
 local SpeedLabel = Instance.new("TextLabel")
-SpeedLabel.Parent = SpeedFrame
-SpeedLabel.Size = UDim2.new(0.7, 0, 0.6, 0)
+SpeedLabel.Parent = SpeedSection
+SpeedLabel.Size = UDim2.new(1, 0, 0.4, 0)
 SpeedLabel.BackgroundTransparency = 1
-SpeedLabel.Text = "🏃 Tốc độ: 16"
-SpeedLabel.TextColor3 = Color3.white
+SpeedLabel.Text = "🏃 TỐC ĐỘ CHẠY: 16"
+SpeedLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
 SpeedLabel.Font = Enum.Font.GothamMedium
 SpeedLabel.TextScaled = true
 SpeedLabel.TextXAlignment = Enum.TextXAlignment.Left
 
+local SpeedValue = Instance.new("TextLabel")
+SpeedValue.Parent = SpeedSection
+SpeedValue.Size = UDim2.new(0.2, 0, 0.4, 0)
+SpeedValue.Position = UDim2.new(0.8, 0, 0, 0)
+SpeedValue.BackgroundTransparency = 1
+SpeedValue.Text = "16"
+SpeedValue.TextColor3 = Color3.fromRGB(0, 200, 255)
+SpeedValue.Font = Enum.Font.GothamBold
+SpeedValue.TextScaled = true
+
 local SpeedBar = Instance.new("Frame")
-SpeedBar.Parent = SpeedFrame
+SpeedBar.Parent = SpeedSection
 SpeedBar.Size = UDim2.new(1, 0, 0.3, 0)
-SpeedBar.Position = UDim2.new(0, 0, 0.7, 0)
-SpeedBar.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+SpeedBar.Position = UDim2.new(0, 0, 0.5, 0)
+SpeedBar.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
 
 local SpeedFill = Instance.new("Frame")
 SpeedFill.Parent = SpeedBar
-SpeedFill.Size = UDim2.new(0.32, 0, 1, 0) -- 16/50
+SpeedFill.Size = UDim2.new(0.32, 0, 1, 0) -- Mặc định 16/50 = 0.32
 SpeedFill.BackgroundColor3 = Color3.fromRGB(100, 150, 255)
 
-local SC = Instance.new("UICorner")
-SC.CornerRadius = UDim.new(0.3, 0)
-SC.Parent = SpeedBar
-SC:Clone().Parent = SpeedFill
+local BarCorner = Instance.new("UICorner")
+BarCorner.CornerRadius = UDim.new(0.3, 0)
+BarCorner.Parent = SpeedBar
+BarCorner:Clone().Parent = SpeedFill
 
--- Thanh trượt Nhảy cao
-local JumpFrame = Instance.new("Frame")
-JumpFrame.Parent = Main
-JumpFrame.Size = UDim2.new(0.9, 0, 0.15, 0)
-JumpFrame.Position = UDim2.new(0.05, 0, 0.4, 0)
-JumpFrame.BackgroundTransparency = 1
+-- Nút điều chỉnh tốc độ
+local SpeedControls = Instance.new("Frame")
+SpeedControls.Parent = SpeedSection
+SpeedControls.Size = UDim2.new(1, 0, 0.2, 0)
+SpeedControls.Position = UDim2.new(0, 0, 0.85, 0)
+SpeedControls.BackgroundTransparency = 1
+
+local SpeedMinus = Instance.new("TextButton")
+SpeedMinus.Parent = SpeedControls
+SpeedMinus.Size = UDim2.new(0.18, 0, 1, 0)
+SpeedMinus.Text = "-"
+SpeedMinus.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+SpeedMinus.TextColor3 = Color3.white
+SpeedMinus.Font = Enum.Font.GothamBold
+
+local SpeedPlus = Instance.new("TextButton")
+SpeedPlus.Parent = SpeedControls
+SpeedPlus.Size = UDim2.new(0.18, 0, 1, 0)
+SpeedPlus.Position = UDim2.new(0.82, 0, 0, 0)
+SpeedPlus.Text = "+"
+SpeedPlus.BackgroundColor3 = Color3.fromRGB(60, 255, 60)
+SpeedPlus.TextColor3 = Color3.white
+SpeedPlus.Font = Enum.Font.GothamBold
+
+-- === NHẢY CAO ===
+local JumpSection = Instance.new("Frame")
+JumpSection.Parent = Main
+JumpSection.Size = UDim2.new(0.9, 0, 0.22, 0)
+JumpSection.Position = UDim2.new(0.05, 0, 0.4, 0)
+JumpSection.BackgroundTransparency = 1
 
 local JumpLabel = Instance.new("TextLabel")
-JumpLabel.Parent = JumpFrame
-JumpLabel.Size = UDim2.new(0.7, 0, 0.6, 0)
+JumpLabel.Parent = JumpSection
+JumpLabel.Size = UDim2.new(1, 0, 0.4, 0)
 JumpLabel.BackgroundTransparency = 1
-JumpLabel.Text = "⬆️ Nhảy cao: 50"
-JumpLabel.TextColor3 = Color3.white
+JumpLabel.Text = "⬆️ ĐỘ CAO NHẢY: 50"
+JumpLabel.TextColor3 = Color3.fromRGB(200, 200, 255)
 JumpLabel.Font = Enum.Font.GothamMedium
 JumpLabel.TextScaled = true
 JumpLabel.TextXAlignment = Enum.TextXAlignment.Left
 
+local JumpValue = Instance.new("TextLabel")
+JumpValue.Parent = JumpSection
+JumpValue.Size = UDim2.new(0.2, 0, 0.4, 0)
+JumpValue.Position = UDim2.new(0.8, 0, 0, 0)
+JumpValue.BackgroundTransparency = 1
+JumpValue.Text = "50"
+JumpValue.TextColor3 = Color3.fromRGB(0, 200, 255)
+JumpValue.Font = Enum.Font.GothamBold
+JumpValue.TextScaled = true
+
 local JumpBar = Instance.new("Frame")
-JumpBar.Parent = JumpFrame
+JumpBar.Parent = JumpSection
 JumpBar.Size = UDim2.new(1, 0, 0.3, 0)
-JumpBar.Position = UDim2.new(0, 0, 0.7, 0)
-JumpBar.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+JumpBar.Position = UDim2.new(0, 0, 0.5, 0)
+JumpBar.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
 
 local JumpFill = Instance.new("Frame")
 JumpFill.Parent = JumpBar
-JumpFill.Size = UDim2.new(0.5, 0, 1, 0) -- 50/100
-JumpFill.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
+JumpFill.Size = UDim2.new(0.5, 0, 1, 0) -- Mặc định 50/100 = 0.5
+JumpFill.BackgroundColor3 = Color3.fromRGB(255, 150, 50)
 
-local JC = Instance.new("UICorner")
-JC.CornerRadius = UDim.new(0.3, 0)
-JC.Parent = JumpBar
-JC:Clone().Parent = JumpFill
+local JumpBarCorner = Instance.new("UICorner")
+JumpBarCorner.CornerRadius = UDim.new(0.3, 0)
+JumpBarCorner.Parent = JumpBar
+JumpBarCorner:Clone().Parent = JumpFill
 
--- Nút điều khiển
-local BtnFrame = Instance.new("Frame")
-BtnFrame.Parent = Main
-BtnFrame.Size = UDim2.new(0.9, 0, 0.3, 0)
-BtnFrame.Position = UDim2.new(0.05, 0, 0.6, 0)
-BtnFrame.BackgroundTransparency = 1
+-- Nút điều chỉnh nhảy
+local JumpControls = Instance.new("Frame")
+JumpControls.Parent = JumpSection
+JumpControls.Size = UDim2.new(1, 0, 0.2, 0)
+JumpControls.Position = UDim2.new(0, 0, 0.85, 0)
+JumpControls.BackgroundTransparency = 1
 
-local JumpBtn = Instance.new("TextButton")
-JumpBtn.Parent = BtnFrame
-JumpBtn.Size = UDim2.new(0.48, 0, 0.85, 0)
-JumpBtn.Position = UDim2.new(0, 0, 0.1, 0)
-JumpBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
-JumpBtn.Text = "🚀 NHẢY"
-JumpBtn.Font = Enum.Font.GothamBold
-JumpBtn.TextScaled = true
-local BtnCorner = Instance.new("UICorner")
-BtnCorner.CornerRadius = UDim.new(0.1, 0)
-BtnCorner.Parent = JumpBtn
+local JumpMinus = Instance.new("TextButton")
+JumpMinus.Parent = JumpControls
+JumpMinus.Size = UDim2.new(0.18, 0, 1, 0)
+JumpMinus.Text = "-"
+JumpMinus.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+JumpMinus.TextColor3 = Color3.white
+JumpMinus.Font = Enum.Font.GothamBold
 
-local ToggleBtn = Instance.new("TextButton")
-ToggleBtn.Parent = BtnFrame
-ToggleBtn.Size = UDim2.new(0.48, 0, 0.85, 0)
-ToggleBtn.Position = UDim2.new(0.52, 0, 0.1, 0)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
-ToggleBtn.Text = "🔄 BẬT AUTO"
-ToggleBtn.Font = Enum.Font.GothamMedium
-ToggleBtn.TextScaled = true
-BtnCorner:Clone().Parent = ToggleBtn
+local JumpPlus = Instance.new("TextButton")
+JumpPlus.Parent = JumpControls
+JumpPlus.Size = UDim2.new(0.18, 0, 1, 0)
+JumpPlus.Position = UDim2.new(0.82, 0, 0, 0)
+JumpPlus.Text = "+"
+JumpPlus.BackgroundColor3 = Color3.fromRGB(60, 255, 60)
+Plus.TextColor3 = Color3.white
+Plus.Font = Enum.Font.GothamBold
+
+-- === NÚT HÀNH ĐỘNG ===
+local ActionFrame = Instance.new("Frame")
+ActionFrame.Parent = Main
+ActionFrame.Size = UDim2.new(0.9, 0, 0.3, 0)
+ActionFrame.Position = UDim2.new(0.05, 0, 0.65, 0)
+ActionFrame.BackgroundTransparency = 1
+
+local JumpButton = Instance.new("TextButton")
+JumpButton.Parent = ActionFrame
+JumpButton.Size = UDim2.new(0.48, 0, 0.4, 0)
+JumpButton.BackgroundColor3 = Color3.fromRGB(255, 150, 50)
+JumpButton.Text = "🚀 NHẢY CAO"
+JumpButton.TextColor3 = Color3.fromRGB(20, 20, 30)
+JumpButton.Font = Enum.Font.GothamBold
+JumpButton.TextScaled = true
+
+local SuperJumpButton = Instance.new("TextButton")
+SuperJumpButton.Parent = ActionFrame
+SuperJumpButton.Size = UDim2.new(0.48, 0, 0.4, 0)
+SuperJumpButton.Position = UDim2.new(0.52, 0, 0, 0)
+SuperJumpButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+SuperJumpButton.Text = "🔥 SIÊU NHẢY"
+SuperJumpButton.TextColor3 = Color3.fromRGB(20, 20, 30)
+SuperJumpButton.Font = Enum.Font.GothamBold
+SuperJumpButton.TextScaled = true
+
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Parent = ActionFrame
+ToggleButton.Size = UDim2.new(1, 0, 0.4, 0)
+ToggleButton.Position = UDim2.new(0, 0, 0.55, 0)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 80)
+ToggleButton.Text = "🤖 BẬT AUTO JUMP"
+ToggleButton.TextColor3 = Color3.white
+ToggleButton.Font = Enum.Font.GothamMedium
+ToggleButton.TextScaled = true
+
+local ButtonCorner = Instance.new("UICorner")
+ButtonCorner.CornerRadius = UDim.new(0.1, 0)
+ButtonCorner.Parent = JumpButton
+ButtonCorner:Clone().Parent = SuperJumpButton
+ButtonCorner:Clone().Parent = ToggleButton
+ButtonCorner:Clone().Parent = SpeedMinus
+ButtonCorner:Clone().Parent = SpeedPlus
+ButtonCorner:Clone().Parent = JumpMinus
+ButtonCorner:Clone().Parent = JumpPlus
 
 -- Trạng thái
 local Status = Instance.new("TextLabel")
 Status.Parent = Main
-Status.Size = UDim2.new(0.9, 0, 0.1, 0)
-Status.Position = UDim2.new(0.05, 0, 0.92, 0)
+Status.Size = UDim2.new(0.9, 0, 0.08, 0)
+Status.Position = UDim2.new(0.05, 0, 0.95, 0)
 Status.BackgroundTransparency = 1
-Status.Text = "🟢 LOCAL READY"
-Status.TextColor3 = Color3.fromRGB(0, 255, 100)
+Status.Text = "⚡ ĐÃ SẴN SÀNG | TỐC ĐỘ: 16 | NHẢY: 50"
+Status.TextColor3 = Color3.fromRGB(0, 200, 255)
 Status.Font = Enum.Font.GothamMedium
 Status.TextScaled = true
 
 -- Biến lưu trữ
 local settings = {
-    Speed = 16,
-    Jump = 50,
-    Auto = false
+    WalkSpeed = 16,    -- Tốc độ chạy (16 mặc định Roblox)
+    JumpPower = 50,    -- Độ cao nhảy (50 mặc định Roblox)
+    AutoJump = false,
+    SuperJumpMultiplier = 2.0
 }
 
--- Hàm cập nhật thanh trượt
-local function updateBars()
-    SpeedFill:TweenSize(UDim2.new(settings.Speed/50, 0, 1, 0), "Out", "Quad", 0.2)
-    SpeedLabel.Text = "🏃 Tốc độ: "..settings.Speed
+-- Hàm cập nhật hiển thị
+local function updateDisplay()
+    -- Cập nhật thanh trượt
+    SpeedFill:TweenSize(
+        UDim2.new(settings.WalkSpeed/100, 0, 1, 0),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.2
+    )
+    SpeedLabel.Text = "🏃 TỐC ĐỘ CHẠY: " .. settings.WalkSpeed
+    SpeedValue.Text = tostring(settings.WalkSpeed)
     
-    JumpFill:TweenSize(UDim2.new(settings.Jump/100, 0, 1, 0), "Out", "Quad", 0.2)
-    JumpLabel.Text = "⬆️ Nhảy cao: "..settings.Jump
+    JumpFill:TweenSize(
+        UDim2.new(settings.JumpPower/150, 0, 1, 0),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Quad,
+        0.2
+    )
+    JumpLabel.Text = "⬆️ ĐỘ CAO NHẢY: " .. settings.JumpPower
+    JumpValue.Text = tostring(settings.JumpPower)
     
-    hum.WalkSpeed = settings.Speed
-    hum.JumpPower = settings.Jump
+    -- Áp dụng vào nhân vật
+    hum.WalkSpeed = settings.WalkSpeed
+    hum.JumpPower = settings.JumpPower
+    
+    -- Cập nhật trạng thái
+    Status.Text = string.format("⚡ TỐC ĐỘ: %d | NHẢY: %d | %s",
+        settings.WalkSpeed,
+        settings.JumpPower,
+        settings.AutoJump and "AUTO: ON" or "AUTO: OFF"
+    )
+    
+    -- Cập nhật nút Auto
+    ToggleButton.Text = settings.AutoJump and "⏹️ TẮT AUTO JUMP" or "🤖 BẬT AUTO JUMP"
+    ToggleButton.BackgroundColor3 = settings.AutoJump and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(50, 50, 80)
 end
 
--- Hàm nhảy cao
-local lastJump = 0
-local function superJump()
-    if tick() - lastJump < 0.3 then return end
-    lastJump = tick()
+-- Hàm điều chỉnh giá trị
+local function adjustValue(type, amount)
+    if type == "speed" then
+        settings.WalkSpeed = math.clamp(settings.WalkSpeed + amount, 0, 100)
+    elseif type == "jump" then
+        settings.JumpPower = math.clamp(settings.JumpPower + amount, 0, 150)
+    end
+    updateDisplay()
+end
+
+-- Hàm nhảy
+local lastJumpTime = 0
+local function performJump(multiplier)
+    local currentTime = tick()
+    if currentTime - lastJumpTime < 0.3 then return end
+    lastJumpTime = currentTime
     
     if hum.FloorMaterial ~= Enum.Material.Air then
         hum:ChangeState(Enum.HumanoidStateType.Jumping)
         
-        local bv = Instance.new("BodyVelocity")
-        bv.Velocity = Vector3.new(0, settings.Jump * 1.8, 0)
-        bv.MaxForce = Vector3.new(0, math.huge, 0)
-        bv.Parent = char.HumanoidRootPart
-        game.Debris:AddItem(bv, 0.2)
+        -- Áp dụng lực nhảy
+        local bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.Velocity = Vector3.new(0, settings.JumpPower * multiplier, 0)
+        bodyVelocity.MaxForce = Vector3.new(0, math.huge, 0)
+        bodyVelocity.Parent = char.HumanoidRootPart
         
-        JumpBtn.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
-        Status.Text = "🚀 ĐANG NHẢY..."
+        game.Debris:AddItem(bodyVelocity, 0.25)
+        
+        -- Hiệu ứng
+        local originalColor = multiplier == 1 and JumpButton.BackgroundColor3 or SuperJumpButton.BackgroundColor3
+        local button = multiplier == 1 and JumpButton or SuperJumpButton
+        
+        button.BackgroundColor3 = Color3.fromRGB(255, 255, 100)
+        Status.Text = multiplier == 1 and "🚀 ĐANG NHẢY..." or "🔥 ĐANG SIÊU NHẢY..."
+        
         task.wait(0.2)
-        JumpBtn.BackgroundColor3 = Color3.fromRGB(0, 255, 100)
-        Status.Text = "🟢 LOCAL READY"
+        button.BackgroundColor3 = originalColor
+        updateDisplay()
     end
+end
+
+-- Hàm nhảy thường
+local function normalJump()
+    performJump(1.0)
+end
+
+-- Hàm siêu nhảy
+local function superJump()
+    performJump(settings.SuperJumpMultiplier)
 end
 
 -- Auto Jump
-local autoConn
-local function toggleAuto()
-    settings.Auto = not settings.Auto
+local autoJumpConnection
+local function toggleAutoJump()
+    settings.AutoJump = not settings.AutoJump
     
-    if settings.Auto then
-        ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
-        ToggleBtn.Text = "⏹️ TẮT AUTO"
-        Status.Text = "🤖 AUTO JUMP: ON"
-        
-        autoConn = RS.Heartbeat:Connect(function()
+    if settings.AutoJump then
+        -- Bật auto jump
+        autoJumpConnection = RS.Heartbeat:Connect(function()
             if hum.FloorMaterial ~= Enum.Material.Air then
                 hum:ChangeState(Enum.HumanoidStateType.Jumping)
-                local bv = Instance.new("BodyVelocity")
-                bv.Velocity = Vector3.new(0, settings.Jump * 1.5, 0)
-                bv.MaxForce = Vector3.new(0, math.huge, 0)
-                bv.Parent = char.HumanoidRootPart
-                game.Debris:AddItem(bv, 0.15)
+                
+                local bodyVelocity = Instance.new("BodyVelocity")
+                bodyVelocity.Velocity = Vector3.new(0, settings.JumpPower * 0.8, 0)
+                bodyVelocity.MaxForce = Vector3.new(0, math.huge, 0)
+                bodyVelocity.Parent = char.HumanoidRootPart
+                
+                game.Debris:AddItem(bodyVelocity, 0.15)
             end
         end)
     else
-        ToggleBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
-        ToggleBtn.Text = "🔄 BẬT AUTO"
-        Status.Text = "🟢 AUTO JUMP: OFF"
-        if autoConn then autoConn:Disconnect() end
+        -- Tắt auto jump
+        if autoJumpConnection then
+            autoJumpConnection:Disconnect()
+            autoJumpConnection = nil
+        end
     end
+    
+    updateDisplay()
 end
 
 -- Kéo thanh trượt
-local function setupSlider(bar, fill, label, min, max, key)
+local function setupSlider(bar, type)
     local dragging = false
     
-    local function updatePos()
+    local function updateFromMouse()
         if not dragging then return end
-        local mouse = game:GetService("Players").LocalPlayer:GetMouse()
-        local x = math.clamp(mouse.X - bar.AbsolutePosition.X, 0, bar.AbsoluteSize.X)
-        local perc = x / bar.AbsoluteSize.X
-        settings[key] = math.floor(min + (max - min) * perc)
-        updateBars()
+        
+        local mouse = player:GetMouse()
+        local absoluteX = bar.AbsolutePosition.X
+        local absoluteWidth = bar.AbsoluteSize.X
+        
+        local relativeX = math.clamp(mouse.X - absoluteX, 0, absoluteWidth)
+        local percentage = relativeX / absoluteWidth
+        
+        if type == "speed" then
+            settings.WalkSpeed = math.floor(percentage * 100)
+        elseif type == "jump" then
+            settings.JumpPower = math.floor(percentage * 150)
+        end
+        
+        updateDisplay()
     end
     
     bar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
-            updatePos()
+            updateFromMouse()
         end
     end)
     
@@ -243,54 +394,88 @@ local function setupSlider(bar, fill, label, min, max, key)
     
     UIS.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then
-            updatePos()
+            updateFromMouse()
         end
     end)
 end
 
--- Kết nối sự kiện
-JumpBtn.MouseButton1Click:Connect(superJump)
-ToggleBtn.MouseButton1Click:Connect(toggleAuto)
+-- Kết nối sự kiện nút
+SpeedMinus.MouseButton1Click:Connect(function() adjustValue("speed", -5) end)
+SpeedPlus.MouseButton1Click:Connect(function() adjustValue("speed", 5) end)
+JumpMinus.MouseButton1Click:Connect(function() adjustValue("jump", -5) end)
+JumpPlus.MouseButton1Click:Connect(function() adjustValue("jump", 5) end)
 
-setupSlider(SpeedBar, SpeedFill, SpeedLabel, 16, 100, "Speed")
-setupSlider(JumpBar, JumpFill, JumpLabel, 20, 100, "Jump")
+JumpButton.MouseButton1Click:Connect(normalJump)
+SuperJumpButton.MouseButton1Click:Connect(superJump)
+ToggleButton.MouseButton1Click:Connect(toggleAutoJump)
+
+-- Thiết lập thanh trượt kéo
+setupSlider(SpeedBar, "speed")
+setupSlider(JumpBar, "jump")
 
 -- Phím tắt
-UIS.InputBegan:Connect(function(input, processed)
-    if processed then return end
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
     
-    if input.KeyCode == Enum.KeyCode.J then
+    -- Điều chỉnh tốc độ
+    if input.KeyCode == Enum.KeyCode.LeftControl then
+        adjustValue("speed", -5)
+    elseif input.KeyCode == Enum.KeyCode.RightControl then
+        adjustValue("speed", 5)
+    
+    -- Điều chỉnh nhảy cao
+    elseif input.KeyCode == Enum.KeyCode.LeftShift then
+        adjustValue("jump", -5)
+    elseif input.KeyCode == Enum.KeyCode.RightShift then
+        adjustValue("jump", 5)
+    
+    -- Nhảy
+    elseif input.KeyCode == Enum.KeyCode.Space then
+        normalJump()
+    elseif input.KeyCode == Enum.KeyCode.J then
         superJump()
+    
+    -- Auto Jump
     elseif input.KeyCode == Enum.KeyCode.U then
-        toggleAuto()
-    elseif input.KeyCode == Enum.KeyCode.LeftBracket then
-        settings.Jump = math.max(20, settings.Jump - 5)
-        updateBars()
-    elseif input.KeyCode == Enum.KeyCode.RightBracket then
-        settings.Jump = math.min(100, settings.Jump + 5)
-        updateBars()
+        toggleAutoJump()
+    
+    -- Ẩn/hiện GUI
     elseif input.KeyCode == Enum.KeyCode.H then
         Main.Visible = not Main.Visible
+    
+    -- Reset về mặc định
+    elseif input.KeyCode == Enum.KeyCode.R then
+        settings.WalkSpeed = 16
+        settings.JumpPower = 50
+        updateDisplay()
     end
 end)
 
 -- Khởi động
-updateBars()
+updateDisplay()
 
--- Respawn handler
+-- Xử lý respawn
 char.Died:Connect(function()
-    task.wait(5)
+    task.wait(3) -- Đợi respawn
     if char and char.Parent then
         hum = char:WaitForChild("Humanoid")
-        updateBars()
+        updateDisplay()
     end
 end)
 
 player.CharacterAdded:Connect(function(newChar)
     char = newChar
     hum = char:WaitForChild("Humanoid")
-    task.wait(1)
-    updateBars()
+    task.wait(1) -- Đợi load character
+    updateDisplay()
 end)
 
-print("✅ NameHub Local đã tải! Phím tắt: J=Jump, U=Auto, H=Hide, []=Adjust Jump")
+print("✅ SPEED & JUMP CONTROL ĐÃ TẢI!")
+print("📋 PHÍM TẮT:")
+print("   Ctrl Trái/Phải: Giảm/Tăng tốc độ")
+print("   Shift Trái/Phải: Giảm/Tăng độ cao nhảy")
+print("   Space: Nhảy thường")
+print("   J: Siêu nhảy")
+print("   U: Bật/tắt Auto Jump")
+print("   H: Ẩn/hiện GUI")
+print("   R: Reset về mặc định")
