@@ -1,6 +1,3 @@
--- NameHub LocalScript - Chạy trên Client (Local Player)
--- Tác giả: Local Game Developer
--- Ngày: 2024
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
